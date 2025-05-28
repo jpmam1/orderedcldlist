@@ -1,5 +1,5 @@
 Package: orderedcldlist
-Version: 0.1
+Version: 1.0
 Date: 2025-05-16
 Title: Compact Letter Display (cldList) Specifying the Order of Letter Assignment
 Authors@R: person(given = "Jared",

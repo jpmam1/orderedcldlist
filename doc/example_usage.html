@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Example Usage</title>
+<style type="text/css">
+/**
+ * Prism.s theme ported from highlight.js's xcode style
+ */
+pre code {
+  padding: 1em;
+}
+.token.comment {
+  color: #007400;
+}
+.token.punctuation {
+  color: #999;
+}
+.token.tag,
+.token.selector {
+  color: #aa0d91;
+}
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: #1c00cf;
+}
+.token.property,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+  color: #c41a16;
+}
+.token.inserted {
+  background-color: #ccffd8;
+}
+.token.deleted {
+  background-color: #ffebe9;
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #9a6e3a;
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #836c28;
+}
+.token.function,
+.token.class-name {
+  color: #DD4A68;
+}
+.token.regex,
+.token.important,
+.token.variable {
+  color: #5c2699;
+}
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+</style>
+<style type="text/css">
+body {
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+body, .footnotes, code { font-size: .9em; }
+li li { font-size: .95em; }
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+pre, img { max-width: 100%; }
+pre, pre:hover {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+pre code {
+  display: block;
+  overflow-x: auto;
+}
+code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
+:not(pre) > code, code[class] { background-color: #F8F8F8; }
+code.language-undefined, pre > code:not([class]) {
+  background-color: inherit;
+  border: 1px solid #eee;
+}
+table {
+  margin: auto;
+  border-top: 1px solid #666;
+}
+table thead th { border-bottom: 1px solid #ddd; }
+th, td { padding: 5px; }
+thead, tfoot, tr:nth-child(even) { background: #eee; }
+blockquote {
+  color: #666;
+  margin: 0;
+  padding-left: 1em;
+  border-left: 0.5em solid #eee;
+}
+hr, .footnotes::before { border: 1px dashed #ddd; }
+.frontmatter { text-align: center; }
+#TOC .numbered li { list-style: none; }
+#TOC .numbered { padding-left: 0; }
+#TOC .numbered ul { padding-left: 1em; }
+table, .body h2 { border-bottom: 1px solid #666; }
+.body .appendix, .appendix ~ h2 { border-bottom-style: dashed; }
+.footnote-ref a::before { content: "["; }
+.footnote-ref a::after { content: "]"; }
+section.footnotes::before {
+  content: "";
+  display: block;
+  max-width: 20em;
+}
+
+@media print {
+  body {
+    font-size: 12pt;
+    max-width: 100%;
+  }
+  tr, img { page-break-inside: avoid; }
+}
+@media only screen and (min-width: 992px) {
+  pre { white-space: pre; }
+}
+</style>
+</head>
+<body>
+<div class="frontmatter">
+<div class="title"><h1>Example Usage</h1></div>
+<div class="author"><h2>Jared Mamrot</h2></div>
+<div class="date"><h3>2025-05-27</h3></div>
+</div>
+<div class="body">
+<pre><code class="language-r">#&gt; This function takes the output of TukeyHSD post-hoc test, modified to include
+#&gt; a &quot;Comparison&quot; column, e.g.
+</code></pre>
+<pre><code class="language-r">library(orderedcldlist)
+set.seed(12345)
+df &lt;- data.frame(program = rep(c(&quot;AA&quot;, &quot;BB&quot;, &quot;CC&quot;, &quot;DD&quot;), each = 10),
+                 weight_loss = c(runif(10, 0, 10),
+                                 runif(10, 0, 4),
+                                 runif(10, 1, 7),
+                                 runif(10, 0, 3)),
+                 group = factor(sample(c(0,1), replace = TRUE, size = 10)))
+model = aov(weight_loss ~ program * group, data = df)
+summary(model)
+#&gt;               Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+#&gt; program        3 172.43   57.48  20.044 1.7e-07 ***
+#&gt; group          1   1.91    1.91   0.667   0.420    
+#&gt; program:group  3   7.20    2.40   0.836   0.484    
+#&gt; Residuals     32  91.76    2.87                    
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+TUK = TukeyHSD(model, ordered = TRUE)
+TUK = as.data.frame(TUK[[1]])
+HSD = data.frame(Comparison=row.names(TUK),
+                 diff=TUK$diff, lwr=TUK$lwr, upr=TUK$upr, p.adj=TUK$`p adj`)
+HSD
+#&gt;   Comparison        diff        lwr      upr        p.adj
+#&gt; 1      BB-DD 0.002069068 -2.0497390 2.053877 1.000000e+00
+#&gt; 2      CC-DD 2.787422247  0.7356142 4.839230 4.494970e-03
+#&gt; 3      AA-DD 4.940995745  2.8891877 6.992804 1.396929e-06
+#&gt; 4      CC-BB 2.785353179  0.7335451 4.837161 4.527793e-03
+#&gt; 5      AA-BB 4.938926677  2.8871186 6.990735 1.407843e-06
+#&gt; 6      AA-CC 2.153573498  0.1017654 4.205382 3.676250e-02
+
+
+desired_order = c(&quot;BB&quot;, &quot;AA&quot;, &quot;CC&quot;, &quot;DD&quot;)
+orderedcldlist(data = HSD,
+               comparison = &quot;Comparison&quot;,
+               p.value = &quot;p.adj&quot;,
+               threshold = 0.05,
+               desired_order = desired_order)
+#&gt;   Group Letter MonoLetter
+#&gt; 1    BB      a        a  
+#&gt; 2    CC      b         b 
+#&gt; 3    DD      a        a  
+#&gt; 4    AA      c          c
+
+desired_order = c(&quot;DD&quot;, &quot;BB&quot;, &quot;CC&quot;, &quot;AA&quot;)
+orderedcldlist(data = HSD,
+               comparison = &quot;Comparison&quot;,
+               p.value = &quot;p.adj&quot;,
+               threshold = 0.05,
+               desired_order = desired_order)
+#&gt;   Group Letter MonoLetter
+#&gt; 1    DD      a        a  
+#&gt; 2    BB      a        a  
+#&gt; 3    CC      b         b 
+#&gt; 4    AA      c          c
+</code></pre>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+</body>
+</html>

@@ -55,26 +55,31 @@ orderedcldlist <- function(data = NULL, comparison = NULL, p.value = NULL,
   }
   
   df = data[data[[p.value]] <= threshold,]
+  combinations <- expand.grid(x = desired_order, y = desired_order)
+  combinations$Comparison <- paste(combinations$y, combinations$x, sep = "-")
+  combinations$score <- rownames(combinations)
+  combinations$x <- NULL
+  combinations$y <- NULL
+  combinations
+  
   df$switched <- paste(gsub(".*-", "", df[[comparison]]),
                        gsub("-.*", "", df[[comparison]]),
                        sep = "-")
   
   for (i in 1:nrow(df)) {
     for(j in seq_along(desired_order)) {
-      if(desired_order[j] != gsub(".*-", "", df[[comparison]][i]) &
-         desired_order[j] != gsub("-.*", "", df[[comparison]][i])) {
-        next
-      } else if (desired_order[j] == gsub(".*-", "", df[[comparison]][i])) {
+      if (desired_order[j] == gsub(".*-", "", df[[comparison]][i])) {
         df[[comparison]][i] <- df$switched[i]
-        next
-      } else {
-        next
+        break
+      } else if (desired_order[j] == gsub("-.*", "", df[[comparison]][i])) {
+        break
       }
     }
   }
-  ordered_df <- df[order(-rowSums(sapply(seq_along(desired_order), function(i) {
-    i * grepl(desired_order[i], df[[comparison]])})),
-    df[[comparison]], decreasing = TRUE),]
+  df
+  df <- merge(df, combinations, by = "Comparison", all.x = TRUE)
+  
+  ordered_df <- df[order(as.integer(df[["score"]])),]
   Comparison = ordered_df[[p.value]]
   names(Comparison) <- ordered_df[[comparison]]
   

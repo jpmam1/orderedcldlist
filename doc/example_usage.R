@@ -41,5 +41,3 @@ orderedcldlist(data = HSD,
                p.value = "p.adj",
                threshold = 0.05,
                desired_order = desired_order)
-
-

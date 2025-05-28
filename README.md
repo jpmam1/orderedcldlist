@@ -63,5 +63,3 @@ orderedcldlist(data = HSD,
 
 GPLv3
 
-## 🔧 Maintainer
-Jared Mamrot <jaredmamrot@gmail.com>

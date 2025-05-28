@@ -34,12 +34,6 @@ TUK = as.data.frame(TUK[[1]])
 HSD = data.frame(Comparison=row.names(TUK),
                  diff=TUK$diff, lwr=TUK$lwr, upr=TUK$upr, p.adj=TUK$`p adj`)
 HSD
-desired_order = c("BB", "AA", "CC", "DD")
-orderedcldlist(data = HSD,
-               comparison = "Comparison",
-               p.value = "p.adj",
-               threshold = 0.05,
-               desired_order = desired_order)
 
 desired_order2 = c("DD", "BB", "CC", "AA")
 orderedcldlist(data = HSD,

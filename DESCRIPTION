@@ -1,0 +1,23 @@
+Package: orderedcldlist
+Version: 0.1
+Date: 2025-05-16
+Title: Compact Letter Display (cldList) Specifying the Order of Letter Assignment
+Authors@R: person(given = "Jared",
+                  family = "Mamrot",
+                  role = c("aut", "cre"),
+                  email = "jaredmamrot@gmail.com",
+                  comment = c(ORCID = "0000-0002-7644-2417"))
+Author: Jared Mamrot [aut, cre] (<https://orcid.org/0000-0002-7644-2417>)
+Description: Assigns letters denoting statistical significance in a user-specified order. The orderedcldlist source code was adapted from the cldList source code in the [rcompanion package](<https://CRAN.R-project.org/package=rcompanion>) under the GNU GPLv3 license on the 16th May 2025.
+Depends: R (>= 4.4.0)
+Imports: multcompView (>= 0.1-9)
+Maintainer: Jared Mamrot <jaredmamrot@gmail.com>
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    knitr,
+    rmarkdown,
+    devtools
+VignetteBuilder: knitr
+License: GPL (>= 3)

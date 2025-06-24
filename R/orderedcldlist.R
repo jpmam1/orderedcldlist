@@ -61,20 +61,27 @@ orderedcldlist <- function(data = NULL, comparison = NULL, p.value = NULL,
   
   for (i in 1:nrow(df)) {
     for(j in seq_along(desired_order)) {
-      if(desired_order[j] != gsub(".*-", "", df[[comparison]][i]) &
-         desired_order[j] != gsub("-.*", "", df[[comparison]][i])) {
-        next
+      if(desired_order[j] == gsub("-.*", "", df[[comparison]][i])) {
+        break
       } else if (desired_order[j] == gsub(".*-", "", df[[comparison]][i])) {
         df[[comparison]][i] <- df$switched[i]
-        next
-      } else {
-        next
+        break
       }
     }
   }
-  ordered_df <- df[order(-rowSums(sapply(seq_along(desired_order), function(i) {
-    i * grepl(desired_order[i], df[[comparison]])})),
-    df[[comparison]], decreasing = TRUE),]
+  
+  for(i in 1:nrow(df)) {
+    for(j in seq_along(desired_order)) {
+      if(desired_order[j] == gsub("-.*", "", df[[comparison]][i])) {
+        df$order[i] <- j
+      } else if(desired_order[j] == gsub(".*-", "", df[[comparison]][i])) {
+        df$order[i] <- df$order[i] + j
+      } else {
+      next
+      }
+    }
+  }
+  ordered_df <- df[order(df$order),]
   Comparison = ordered_df[[p.value]]
   names(Comparison) <- ordered_df[[comparison]]
   

@@ -1,6 +1,6 @@
-#' @title: Ordered cldList
+#' @title Ordered cldList
 #'
-#' @description: This function takes the output of TukeyHSD post-hoc test, modified to include 
+#' @description This function takes the output of TukeyHSD post-hoc test, modified to include 
 #' a Comparison column
 #'
 #' @examples
@@ -54,40 +54,34 @@ orderedcldlist <- function(data = NULL, comparison = NULL, p.value = NULL,
     FLAG = 1
   }
   
-  df = data[data[[p.value]] <= threshold,]
-  df$switched <- paste(gsub(".*-", "", df[[comparison]]),
-                       gsub("-.*", "", df[[comparison]]),
-                       sep = "-")
+  df1 <- data
+  df2 <- data
   
-  for (i in 1:nrow(df)) {
-    for(j in seq_along(desired_order)) {
-      if(desired_order[j] == gsub("-.*", "", df[[comparison]][i])) {
-        break
-      } else if (desired_order[j] == gsub(".*-", "", df[[comparison]][i])) {
-        df[[comparison]][i] <- df$switched[i]
-        break
-      }
-    }
-  }
+  df2[[comparison]] <- paste(gsub(".*-", "", df1[[comparison]]),
+                             gsub("-.*", "", df1[[comparison]]),
+                             sep = "-")
+  df <- rbind(df1, df2)
   
   for(i in 1:nrow(df)) {
     for(j in seq_along(desired_order)) {
       if(desired_order[j] == gsub("-.*", "", df[[comparison]][i])) {
         df$order[i] <- j
       } else if(desired_order[j] == gsub(".*-", "", df[[comparison]][i])) {
-        df$order[i] <- df$order[i] + j
+        df$order[i] <- df$order[i] + (j / 1000)
       } else {
       next
       }
     }
   }
+  df <- df[df[[p.value]] <= threshold,]
   ordered_df <- df[order(df$order),]
   Comparison = ordered_df[[p.value]]
   names(Comparison) <- ordered_df[[comparison]]
   
   if (print.comp == TRUE) {
     Y = data.frame(Comparisons = Comparison, p.value = p.value, 
-                   Value = Comparison, Threshold = threshold)
+                   Value = Comparison, Threshold = threshold,
+                   order = ordered_df$order)
     cat("\n", "\n")
     print(Y)
     cat("\n", "\n")
